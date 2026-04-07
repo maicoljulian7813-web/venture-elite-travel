@@ -261,13 +261,17 @@
     .cover-finland-half {
       position: absolute;
       inset: 0;
-      background: linear-gradient(160deg, #061a35 0%, #0a2d52 50%, #062a1e 100%);
+      background:
+        linear-gradient(160deg, rgba(6,26,53,0.62) 0%, rgba(10,45,82,0.52) 50%, rgba(6,42,30,0.62) 100%),
+        url('https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
       clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
     }
     .cover-egypt-half {
       position: absolute;
       inset: 0;
-      background: linear-gradient(200deg, #1a0e04 0%, #2d1a08 45%, #3d2410 100%);
+      background:
+        linear-gradient(200deg, rgba(26,14,4,0.58) 0%, rgba(45,26,8,0.52) 45%, rgba(61,36,16,0.60) 100%),
+        url('https://images.unsplash.com/photo-1539768942893-daf53e448371?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
       clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
     }
     .cover-overlay {
@@ -641,6 +645,39 @@
     .slide-finland .dish-tag { background: rgba(125,213,160,0.15); color: #7dd5a0; }
     .slide-egypt   .dish-tag { background: rgba(212,168,51,0.15); color: #d4a833; }
 
+    /* === FOOD IMAGES inside dish cards === */
+    .dish-img {
+      width: 100%;
+      max-height: min(18vh, 120px);
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    /* === SLIDE BACKGROUND PHOTOS ===
+       Dark overlay ensures text stays readable over the photo. */
+    #slide-2 {
+      background:
+        linear-gradient(rgba(6,24,48,0.80), rgba(6,24,48,0.85)),
+        url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    #slide-3 {
+      background:
+        linear-gradient(rgba(6,24,48,0.74), rgba(6,24,48,0.80)),
+        url('https://images.unsplash.com/photo-1551698618-1dfe5d97d256?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    #slide-9 {
+      background:
+        linear-gradient(rgba(20,10,2,0.76), rgba(20,10,2,0.82)),
+        url('https://images.unsplash.com/photo-1539768942893-daf53e448371?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    #slide-10 {
+      background:
+        linear-gradient(rgba(20,10,2,0.72), rgba(20,10,2,0.78)),
+        url('https://images.unsplash.com/photo-1553913861-c0fddf2619b9?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+
     /* FAQ grid */
     .faq-grid {
       display: grid;
@@ -914,6 +951,7 @@
       <div class="accent-line reveal d2"></div>
       <div class="two-col">
         <div class="dish-card reveal d3">
+          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Poronk%C3%A4ristys.jpg" alt="Poronkäristys - reindeer stew" loading="lazy">
           <p class="dish-name">Poronkäristys</p>
           <p class="dish-desc">Reindeer stew with butter and salt. It is <strong>salty</strong> and delicious. You eat it with a <strong>fork</strong> and a <strong>knife</strong>, and sometimes with a <strong>spoon</strong> for the sauce.</p>
           <div>
@@ -922,6 +960,7 @@
           </div>
         </div>
         <div class="dish-card reveal d4">
+          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Lohikeitto.JPG" alt="Lohikeitto - salmon soup" loading="lazy">
           <p class="dish-name">Lohikeitto</p>
           <p class="dish-desc">A <strong>creamy</strong> salmon soup with potatoes and carrots. It is creamy and warm. You usually eat it with a <strong>spoon</strong>.</p>
           <div>
@@ -947,6 +986,7 @@
       <div class="two-col">
         <div>
           <div class="dish-card reveal d3">
+            <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/KarelianPasties.jpg" alt="Karelian Pies" loading="lazy">
             <p class="dish-name">Karelian Pies</p>
             <p class="dish-desc">Traditional rye pastry filled with rice porridge. A classic Finnish snack.</p>
           </div>
@@ -1125,6 +1165,7 @@
       <div class="accent-line reveal d2"></div>
       <div class="two-col">
         <div class="dish-card reveal d3">
+          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kushari.jpg" alt="Koshary - Egyptian rice dish" loading="lazy">
           <p class="dish-name">Koshary</p>
           <p class="dish-desc">Rice, pasta, lentils, tomato sauce, and crispy onions. You usually eat it with a <strong>spoon</strong> or a <strong>fork</strong>.</p>
           <div>
@@ -1133,6 +1174,7 @@
           </div>
         </div>
         <div class="dish-card reveal d4">
+          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Ta%27ameya_-_Egyptian_falafel.jpg" alt="Ta'ameya - Egyptian falafel" loading="lazy">
           <p class="dish-name">Ta'ameya</p>
           <p class="dish-desc">Egyptian falafel with fava beans and fresh herbs. You <strong>can</strong> eat it with your hands or with a <strong>fork</strong>. It is part of a <strong>plant-based diet</strong>.</p>
           <div>
@@ -1156,6 +1198,7 @@
       <div class="accent-line reveal d2"></div>
       <div class="two-col">
         <div class="dish-card reveal d3" style="align-self:flex-start;">
+          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Om_ali.jpg" alt="Om Ali - Egyptian dessert" loading="lazy">
           <p class="dish-name">Om Ali 🍮</p>
           <p class="dish-desc">Made with puff pastry, milk, and nuts. You eat it with a <strong>spoon</strong>. A very famous Egyptian dessert.</p>
           <div>
