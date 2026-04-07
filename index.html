@@ -605,14 +605,29 @@
       display: flex;
       flex-direction: column;
       gap: clamp(4px, 0.7vh, 8px);
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-out-expo), box-shadow 0.2s ease;
     }
+    .dish-card:hover { transform: translateY(-3px); }
     .slide-finland .dish-card {
       background: rgba(74,170,212,0.08);
       border: 1px solid rgba(74,170,212,0.2);
     }
+    .slide-finland .dish-card:hover { box-shadow: 0 8px 28px rgba(125,213,160,0.22); }
     .slide-egypt .dish-card {
       background: rgba(212,168,51,0.08);
       border: 1px solid rgba(212,168,51,0.2);
+    }
+    .slide-egypt .dish-card:hover { box-shadow: 0 8px 28px rgba(212,168,51,0.22); }
+
+    /* "Click to expand" hint shown on dish cards */
+    .dish-hint {
+      font-family: var(--font-body);
+      font-size: clamp(0.55rem, 0.85vw, 0.68rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-top: 2px;
     }
 
     .dish-name {
@@ -653,6 +668,159 @@
       border-radius: 8px;
       flex-shrink: 0;
       display: block;
+    }
+
+    /* ============================================
+       DISH DETAIL OVERLAY — click any dish card
+       ============================================ */
+    .dish-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0);
+      pointer-events: none;
+      transition: background 0.3s ease;
+    }
+    .dish-overlay.active {
+      background: rgba(0,0,0,0.88);
+      pointer-events: all;
+    }
+
+    .dish-overlay-card {
+      position: relative;
+      border-radius: 18px;
+      width: min(90vw, 700px);
+      max-height: 88vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.9) translateY(24px);
+      opacity: 0;
+      transition: transform 0.4s var(--ease-out-expo), opacity 0.35s ease;
+    }
+    .dish-overlay.active .dish-overlay-card {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
+
+    /* Theme colors for overlay */
+    .dish-overlay-card.finland-theme {
+      background: #07192e;
+      border: 1px solid rgba(125,213,160,0.35);
+      --accent-keyword: #7dd5a0;
+    }
+    .dish-overlay-card.egypt-theme {
+      background: #190d03;
+      border: 1px solid rgba(212,168,51,0.35);
+      --accent-keyword: #d4a833;
+    }
+
+    /* Top accent bar */
+    .dish-overlay-card.finland-theme::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: linear-gradient(90deg, #7dd5a0, #4aaad4);
+    }
+    .dish-overlay-card.egypt-theme::before {
+      content: '';
+      display: block;
+      height: 3px;
+      background: linear-gradient(90deg, #d4a833, #e07840);
+    }
+
+    .dish-overlay-img {
+      width: 100%;
+      height: min(42vh, 280px);
+      object-fit: cover;
+      display: block;
+      flex-shrink: 0;
+    }
+
+    /* Placeholder when no image */
+    .dish-overlay-img[src=""] {
+      display: none;
+    }
+
+    .dish-overlay-body {
+      padding: clamp(14px, 2.2vh, 26px) clamp(18px, 3vw, 32px) clamp(18px, 2.5vh, 30px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(6px, 1vh, 10px);
+      flex: 1;
+    }
+
+    .dish-overlay-country {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+
+    .dish-overlay-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.05;
+    }
+    .finland-theme .dish-overlay-name { color: #9de0c8; }
+    .egypt-theme   .dish-overlay-name { color: #e0c060; }
+
+    .dish-overlay-desc {
+      font-family: var(--font-body);
+      font-size: clamp(0.85rem, 1.6vw, 1rem);
+      line-height: 1.75;
+      opacity: 0.88;
+      color: inherit;
+    }
+
+    .dish-overlay-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding-top: 4px;
+    }
+
+    .dish-overlay-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(0,0,0,0.55);
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s, transform 0.15s;
+      line-height: 1;
+    }
+    .dish-overlay-close:hover {
+      background: rgba(0,0,0,0.8);
+      transform: scale(1.1);
+    }
+
+    /* Keyboard hint inside overlay */
+    .dish-overlay-esc {
+      font-family: var(--font-body);
+      font-size: clamp(0.55rem, 0.85vw, 0.68rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.3;
+      text-align: center;
+      padding-bottom: 4px;
     }
 
     /* === SLIDE BACKGROUND PHOTOS ===
@@ -1022,7 +1190,7 @@
           </div>
         </div>
         <div class="dish-card reveal d4">
-          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Lohikeitto.JPG" alt="Lohikeitto - salmon soup" loading="lazy">
+          <img class="dish-img" src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=800&q=80" alt="Lohikeitto - salmon soup" loading="lazy">
           <p class="dish-name">Lohikeitto</p>
           <p class="dish-desc">A <strong>creamy</strong> salmon soup with potatoes and carrots. It is creamy and warm. You usually eat it with a <strong>spoon</strong>.</p>
           <div>
@@ -1048,12 +1216,13 @@
       <div class="two-col">
         <div>
           <div class="dish-card reveal d3">
-            <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/KarelianPasties.jpg" alt="Karelian Pies" loading="lazy">
+            <img class="dish-img" src="https://images.unsplash.com/photo-1604152135912-04a022e23696?auto=format&fit=crop&w=800&q=80" alt="Karelian Pies" loading="lazy">
             <p class="dish-name">Karelian Pies</p>
             <p class="dish-desc">Traditional rye pastry filled with rice porridge. A classic Finnish snack.</p>
           </div>
           <br>
           <div class="dish-card reveal d4">
+            <img class="dish-img" src="https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80" alt="Glögi - Finnish mulled berry drink" loading="lazy">
             <p class="dish-name">Glögi 🍷</p>
             <p class="dish-desc">A hot berry drink with <strong>cinnamon</strong>, <strong>ginger</strong>, and <strong>cardamom</strong>. Perfect for cold winter nights.</p>
           </div>
@@ -1227,7 +1396,7 @@
       <div class="accent-line reveal d2"></div>
       <div class="two-col">
         <div class="dish-card reveal d3">
-          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Kushari.jpg" alt="Koshary - Egyptian rice dish" loading="lazy">
+          <img class="dish-img" src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=800&q=80" alt="Koshary - Egyptian rice dish" loading="lazy">
           <p class="dish-name">Koshary</p>
           <p class="dish-desc">Rice, pasta, lentils, tomato sauce, and crispy onions. You usually eat it with a <strong>spoon</strong> or a <strong>fork</strong>.</p>
           <div>
@@ -1236,7 +1405,7 @@
           </div>
         </div>
         <div class="dish-card reveal d4">
-          <img class="dish-img" src="https://commons.wikimedia.org/wiki/Special:FilePath/Ta%27ameya_-_Egyptian_falafel.jpg" alt="Ta'ameya - Egyptian falafel" loading="lazy">
+          <img class="dish-img" src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=800&q=80" alt="Ta'ameya - Egyptian falafel" loading="lazy">
           <p class="dish-name">Ta'ameya</p>
           <p class="dish-desc">Egyptian falafel with fava beans and fresh herbs. You <strong>can</strong> eat it with your hands or with a <strong>fork</strong>. It is part of a <strong>plant-based diet</strong>.</p>
           <div>
@@ -1365,6 +1534,23 @@
       <p class="agency-footer reveal d6">✈ &nbsp;Venture Elite Travel Agency</p>
     </div>
   </section>
+
+  <!-- ===========================================
+       DISH DETAIL OVERLAY
+       =========================================== -->
+  <div id="dishOverlay" class="dish-overlay" role="dialog" aria-modal="true" aria-label="Dish detail">
+    <div class="dish-overlay-card" id="dishOverlayCard">
+      <button class="dish-overlay-close" id="dishOverlayClose" aria-label="Close">✕</button>
+      <img class="dish-overlay-img" id="dishOverlayImg" src="" alt="">
+      <div class="dish-overlay-body">
+        <p class="dish-overlay-country" id="dishOverlayCountry"></p>
+        <h3 class="dish-overlay-name" id="dishOverlayName"></h3>
+        <p class="dish-overlay-desc" id="dishOverlayDesc"></p>
+        <div class="dish-overlay-tags" id="dishOverlayTags"></div>
+        <p class="dish-overlay-esc">Press Esc or click outside to close</p>
+      </div>
+    </div>
+  </div>
 
   <!-- ===========================================
        JAVASCRIPT: SLIDE PRESENTATION CONTROLLER
@@ -1514,7 +1700,98 @@
     /* Boot the controller once DOM is ready */
     document.addEventListener('DOMContentLoaded', () => {
       new SlidePresentation();
+      new DishOverlay();
     });
+
+    /* === DISH DETAIL OVERLAY CONTROLLER === */
+    class DishOverlay {
+      constructor() {
+        this.overlay    = document.getElementById('dishOverlay');
+        this.card       = document.getElementById('dishOverlayCard');
+        this.closeBtn   = document.getElementById('dishOverlayClose');
+        this.imgEl      = document.getElementById('dishOverlayImg');
+        this.countryEl  = document.getElementById('dishOverlayCountry');
+        this.nameEl     = document.getElementById('dishOverlayName');
+        this.descEl     = document.getElementById('dishOverlayDesc');
+        this.tagsEl     = document.getElementById('dishOverlayTags');
+        this.isOpen     = false;
+
+        this.setupCards();
+        this.setupClose();
+      }
+
+      /* Add hint label + click handler to every dish card */
+      setupCards() {
+        document.querySelectorAll('.dish-card').forEach(card => {
+          /* Inject "click to expand" hint */
+          const hint = document.createElement('p');
+          hint.className = 'dish-hint';
+          hint.textContent = '↗ Click to expand';
+          card.appendChild(hint);
+
+          card.addEventListener('click', () => this.open(card));
+        });
+      }
+
+      /* Open overlay populated with the clicked card's data */
+      open(card) {
+        const isFinland = !!card.closest('.slide-finland');
+        const theme     = isFinland ? 'finland' : 'egypt';
+        const country   = isFinland ? '🇫🇮 Finland' : '🇪🇬 Egypt / Cairo';
+
+        /* Read data from the card's DOM */
+        const imgSrc  = card.querySelector('.dish-img')?.src || '';
+        const name    = card.querySelector('.dish-name')?.innerHTML || '';
+        const desc    = card.querySelector('.dish-desc')?.innerHTML || '';
+        const tagsDiv = card.querySelector('.dish-card > div');
+        const tags    = tagsDiv ? tagsDiv.innerHTML : '';
+
+        /* Theme */
+        this.card.className = `dish-overlay-card ${theme}-theme`;
+
+        /* Populate */
+        this.imgEl.src       = imgSrc;
+        this.imgEl.alt       = card.querySelector('.dish-name')?.textContent || '';
+        this.imgEl.style.display = imgSrc ? 'block' : 'none';
+        this.countryEl.textContent = country;
+        this.nameEl.innerHTML  = name;
+        this.descEl.innerHTML  = desc;
+        this.tagsEl.innerHTML  = tags;
+
+        /* Show */
+        this.overlay.classList.add('active');
+        this.isOpen = true;
+        this.closeBtn.focus();
+
+        /* Block slide scroll while overlay is open */
+        document.documentElement.style.overflowY = 'hidden';
+      }
+
+      /* Close and restore scroll */
+      close() {
+        this.overlay.classList.remove('active');
+        this.isOpen = false;
+        document.documentElement.style.overflowY = '';
+      }
+
+      setupClose() {
+        /* Close button */
+        this.closeBtn.addEventListener('click', () => this.close());
+
+        /* Click on backdrop (outside card) */
+        this.overlay.addEventListener('click', (e) => {
+          if (e.target === this.overlay) this.close();
+        });
+
+        /* Escape key */
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && this.isOpen) {
+            e.stopPropagation();
+            this.close();
+          }
+        });
+      }
+    }
   </script>
 
 </body>
