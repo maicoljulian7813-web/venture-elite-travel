@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venture Elite Travel Agency — Finland & Egypt/Cairo</title>
+
+  <!-- Fonts: Fraunces (display, editorial) + DM Sans (body, clean) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    /* === RESET === */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ===========================================
+       VIEWPORT FITTING: MANDATORY BASE STYLES
+       =========================================== */
+    html, body { height: 100%; overflow-x: hidden; }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+    }
+
+    :root {
+      --title-size: clamp(1.5rem, 5vw, 4rem);
+      --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+      --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+      --body-size: clamp(0.75rem, 1.5vw, 1.05rem);
+      --small-size: clamp(0.65rem, 1vw, 0.875rem);
+      --slide-padding: clamp(1.5rem, 5vw, 5rem);
+      --content-gap: clamp(0.5rem, 2vw, 1.5rem);
+      --element-gap: clamp(0.25rem, 1vw, 0.75rem);
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration: 0.7s;
+    }
+
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.3rem, 1.2vw, 0.8rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.9rem);
+      }
+    }
+
+    @media (max-height: 600px) {
+      :root {
+        --slide-padding: clamp(0.5rem, 2vw, 1.5rem);
+        --content-gap: clamp(0.2rem, 0.8vw, 0.5rem);
+        --title-size: clamp(1.1rem, 4vw, 2rem);
+        --body-size: clamp(0.65rem, 1vw, 0.85rem);
+      }
+      .nav-dots, .keyboard-hint { display: none; }
+    }
+
+    @media (max-height: 500px) {
+      :root {
+        --slide-padding: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.6rem, 1vw, 0.8rem);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root { --title-size: clamp(1.25rem, 7vw, 2.5rem); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+
+    /* ===========================================
+       GLOBAL TYPOGRAPHY
+       =========================================== */
+    body { font-family: var(--font-body); }
+
+    strong, b {
+      font-weight: 700;
+      color: var(--accent-keyword);
+    }
+
+    /* ===========================================
+       ENTRANCE ANIMATIONS
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity var(--duration) var(--ease-out-expo),
+                  transform var(--duration) var(--ease-out-expo);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity var(--duration) var(--ease-out-expo),
+                  transform var(--duration) var(--ease-out-expo);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity var(--duration) var(--ease-out-expo),
+                  transform var(--duration) var(--ease-out-expo);
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92);
+      transition: opacity var(--duration) var(--ease-out-expo),
+                  transform var(--duration) var(--ease-out-expo);
+    }
+
+    .slide.visible .reveal,
+    .slide.visible .reveal-left,
+    .slide.visible .reveal-right,
+    .slide.visible .reveal-scale {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* Stagger delays */
+    .d1 { transition-delay: 0.05s; }
+    .d2 { transition-delay: 0.15s; }
+    .d3 { transition-delay: 0.25s; }
+    .d4 { transition-delay: 0.35s; }
+    .d5 { transition-delay: 0.45s; }
+    .d6 { transition-delay: 0.55s; }
+    .d7 { transition-delay: 0.65s; }
+    .d8 { transition-delay: 0.75s; }
+
+    /* ===========================================
+       NAVIGATION DOTS (right side)
+       =========================================== */
+    .nav-dots {
+      position: fixed;
+      right: clamp(10px, 1.5vw, 20px);
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(5px, 0.8vh, 9px);
+      z-index: 1000;
+    }
+
+    .nav-dot {
+      width: clamp(6px, 0.7vw, 9px);
+      height: clamp(6px, 0.7vw, 9px);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      border: 1.5px solid rgba(255, 255, 255, 0.45);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-dot:hover { background: rgba(255, 255, 255, 0.6); transform: scale(1.3); }
+
+    .nav-dot.finland-dot.active { background: #7dd5a0; border-color: #7dd5a0; transform: scale(1.4); }
+    .nav-dot.egypt-dot.active  { background: #d4a833; border-color: #d4a833; transform: scale(1.4); }
+    .nav-dot.cover-dot.active  { background: #ffffff; border-color: #ffffff; transform: scale(1.4); }
+    .nav-dot.close-dot.active  { background: #c9a05a; border-color: #c9a05a; transform: scale(1.4); }
+
+    /* ===========================================
+       PROGRESS BAR (top)
+       =========================================== */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, #7dd5a0, #4aaad4, #d4a833);
+      z-index: 1001;
+      transition: width 0.3s ease;
+    }
+
+    /* ===========================================
+       SECTION LABEL (country badge)
+       =========================================== */
+    .section-label {
+      position: absolute;
+      top: clamp(14px, 2vh, 28px);
+      left: clamp(14px, 2vw, 40px);
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 20px;
+      z-index: 10;
+    }
+
+    .label-finland {
+      background: rgba(125, 213, 160, 0.2);
+      color: #7dd5a0;
+      border: 1px solid rgba(125, 213, 160, 0.4);
+    }
+
+    .label-egypt {
+      background: rgba(212, 168, 51, 0.2);
+      color: #d4a833;
+      border: 1px solid rgba(212, 168, 51, 0.4);
+    }
+
+    /* Slide number */
+    .slide-num {
+      position: absolute;
+      top: clamp(14px, 2vh, 28px);
+      right: clamp(30px, 3.5vw, 60px);
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      opacity: 0.4;
+      z-index: 10;
+    }
+
+    /* ===========================================
+       SLIDE 1: COVER
+       =========================================== */
+    .slide-cover {
+      background: #050d1a;
+      overflow: hidden;
+    }
+
+    /* Diagonal split BG */
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .cover-finland-half {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #061a35 0%, #0a2d52 50%, #062a1e 100%);
+      clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
+    }
+    .cover-egypt-half {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(200deg, #1a0e04 0%, #2d1a08 45%, #3d2410 100%);
+      clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+    }
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 50%, transparent 20%, rgba(5,13,26,0.75) 100%);
+      z-index: 1;
+    }
+    /* Aurora glow lines on Finland side */
+    .cover-aurora {
+      position: absolute;
+      top: 10%; left: 0; width: 58%; height: 80%;
+      background:
+        radial-gradient(ellipse at 25% 35%, rgba(125,213,160,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 10% 65%, rgba(74,170,212,0.14) 0%, transparent 45%);
+      z-index: 1;
+    }
+    /* Desert glow on Egypt side */
+    .cover-desert {
+      position: absolute;
+      top: 10%; left: 42%; width: 58%; height: 80%;
+      background:
+        radial-gradient(ellipse at 75% 30%, rgba(212,168,51,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse at 90% 70%, rgba(224,120,64,0.16) 0%, transparent 45%);
+      z-index: 1;
+    }
+
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: var(--slide-padding);
+      gap: var(--content-gap);
+    }
+
+    .cover-agency {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .cover-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 9vw, 7rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .cover-title .finland-word { color: #7dd5a0; }
+    .cover-title .amp { color: rgba(255,255,255,0.35); font-style: italic; font-weight: 400; }
+    .cover-title .egypt-word { color: #d4a833; }
+
+    .cover-subtitle {
+      font-family: var(--font-body);
+      font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+      color: rgba(255,255,255,0.6);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .cover-tags {
+      display: flex;
+      gap: clamp(10px, 2vw, 20px);
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: clamp(4px, 1vh, 10px);
+    }
+
+    .cover-tag {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 24px;
+      letter-spacing: 0.06em;
+    }
+    .cover-tag.f { background: rgba(125,213,160,0.15); color: #7dd5a0; border: 1px solid rgba(125,213,160,0.35); }
+    .cover-tag.e { background: rgba(212,168,51,0.15); color: #d4a833; border: 1px solid rgba(212,168,51,0.35); }
+
+    .cover-divider {
+      width: clamp(30px, 5vw, 60px);
+      height: 2px;
+      background: linear-gradient(90deg, #7dd5a0, #d4a833);
+      border-radius: 2px;
+      margin: clamp(2px, 0.5vh, 6px) 0;
+    }
+
+    /* ===========================================
+       FINLAND SLIDES
+       =========================================== */
+    .slide-finland {
+      --accent-keyword: #7dd5a0;
+      background: #061830;
+      color: #d8eef8;
+    }
+    .slide-finland::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 25%, rgba(125,213,160,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 75%, rgba(74,170,212,0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, rgba(6,40,80,0.5) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Animated aurora shimmer */
+    .slide-finland::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, #7dd5a0, #4aaad4, #7dd5a0, transparent);
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    /* ===========================================
+       EGYPT SLIDES
+       =========================================== */
+    .slide-egypt {
+      --accent-keyword: #d4a833;
+      background: #140a02;
+      color: #f0e0c0;
+    }
+    .slide-egypt::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 80% 15%, rgba(212,168,51,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 85%, rgba(224,120,64,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 0%, rgba(40,20,5,0.6) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .slide-egypt::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: linear-gradient(90deg, transparent, #d4a833, #e07840, #d4a833, transparent);
+      opacity: 0.6;
+      z-index: 1;
+    }
+
+    /* ===========================================
+       CLOSING SLIDE
+       =========================================== */
+    .slide-closing {
+      --accent-keyword: #c9a05a;
+      background: #080e18;
+      color: #eee;
+    }
+    .slide-closing::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(125,213,160,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 60%, rgba(212,168,51,0.12) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ===========================================
+       SHARED SLIDE INNER ELEMENTS
+       =========================================== */
+    .inner {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: var(--slide-padding);
+      gap: var(--content-gap);
+    }
+
+    /* Slide heading */
+    .slide-heading {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .slide-finland .slide-heading { color: #c0e8f8; }
+    .slide-egypt .slide-heading   { color: #f0d490; }
+    .slide-closing .slide-heading { color: #e8e8e8; }
+
+    /* Slide section title (small overline) */
+    .overline {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.5;
+      margin-bottom: clamp(2px, 0.5vh, 6px);
+    }
+
+    /* Body paragraph */
+    .body-text {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.75;
+      opacity: 0.85;
+      max-width: 720px;
+    }
+
+    /* Two-column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(1.5rem, 3vw, 3.5rem);
+      align-items: start;
+    }
+
+    @media (max-width: 700px) {
+      .two-col { grid-template-columns: 1fr; gap: var(--content-gap); }
+    }
+
+    /* Elegant list */
+    .elegant-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3rem, 0.8vh, 0.7rem);
+    }
+
+    .elegant-list li {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.5;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      opacity: 0.88;
+    }
+
+    .elegant-list li::before {
+      content: '—';
+      flex-shrink: 0;
+      font-weight: 300;
+      opacity: 0.45;
+    }
+
+    /* "There Are" highlight list */
+    .there-are-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3rem, 0.7vh, 0.65rem);
+    }
+
+    .there-are-list li {
+      font-family: var(--font-body);
+      font-size: clamp(0.8rem, 1.6vw, 1.05rem);
+      line-height: 1.45;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: clamp(5px, 0.8vh, 8px) clamp(10px, 1.5vw, 16px);
+      border-radius: 8px;
+    }
+
+    .slide-finland .there-are-list li {
+      background: rgba(125,213,160,0.08);
+      border-left: 2.5px solid rgba(125,213,160,0.45);
+    }
+    .slide-egypt .there-are-list li {
+      background: rgba(212,168,51,0.08);
+      border-left: 2.5px solid rgba(212,168,51,0.45);
+    }
+
+    .there-are-list li .ta-label {
+      font-weight: 700;
+      margin-right: 2px;
+    }
+    .slide-finland .there-are-list li .ta-label { color: #7dd5a0; }
+    .slide-egypt   .there-are-list li .ta-label { color: #d4a833; }
+
+    /* Icon + text row */
+    .icon-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      opacity: 0.88;
+    }
+    .icon-row .ico {
+      font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+      flex-shrink: 0;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+
+    /* Rules / can't / should box */
+    .rule-box {
+      border-radius: 10px;
+      padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 18px);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+    }
+    .slide-finland .rule-box {
+      background: rgba(74,170,212,0.1);
+      border: 1px solid rgba(74,170,212,0.25);
+    }
+    .slide-egypt .rule-box {
+      background: rgba(224,120,64,0.1);
+      border: 1px solid rgba(224,120,64,0.25);
+    }
+
+    /* Dish card */
+    .dish-card {
+      border-radius: 12px;
+      padding: clamp(10px, 1.5vh, 18px) clamp(14px, 2vw, 22px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(4px, 0.7vh, 8px);
+    }
+    .slide-finland .dish-card {
+      background: rgba(74,170,212,0.08);
+      border: 1px solid rgba(74,170,212,0.2);
+    }
+    .slide-egypt .dish-card {
+      background: rgba(212,168,51,0.08);
+      border: 1px solid rgba(212,168,51,0.2);
+    }
+
+    .dish-name {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2.2vw, 1.5rem);
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.1;
+    }
+    .slide-finland .dish-name { color: #9de0c8; }
+    .slide-egypt   .dish-name { color: #e0c060; }
+
+    .dish-desc {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      opacity: 0.85;
+    }
+
+    .dish-tag {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-right: 5px;
+      margin-top: 3px;
+    }
+    .slide-finland .dish-tag { background: rgba(125,213,160,0.15); color: #7dd5a0; }
+    .slide-egypt   .dish-tag { background: rgba(212,168,51,0.15); color: #d4a833; }
+
+    /* FAQ grid */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(8px, 1.2vh, 14px) clamp(12px, 2vw, 24px);
+    }
+
+    @media (max-width: 700px) {
+      .faq-grid { grid-template-columns: 1fr; }
+    }
+
+    .faq-item {
+      border-radius: 10px;
+      padding: clamp(8px, 1.2vh, 14px) clamp(12px, 1.5vw, 16px);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .slide-finland .faq-item {
+      background: rgba(125,213,160,0.07);
+      border: 1px solid rgba(125,213,160,0.18);
+    }
+    .slide-egypt .faq-item {
+      background: rgba(212,168,51,0.07);
+      border: 1px solid rgba(212,168,51,0.18);
+    }
+
+    .faq-q {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      font-weight: 700;
+      line-height: 1.4;
+      opacity: 0.95;
+    }
+    .faq-a {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.5;
+      opacity: 0.75;
+    }
+
+    /* Restaurants strip */
+    .restaurants {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(6px, 1vw, 10px);
+      margin-top: clamp(4px, 0.6vh, 8px);
+    }
+    .rest-chip {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      font-weight: 500;
+      padding: 5px 13px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+    }
+    .slide-finland .rest-chip {
+      background: rgba(74,170,212,0.12);
+      color: #7dc8e8;
+      border: 1px solid rgba(74,170,212,0.3);
+    }
+    .slide-egypt .rest-chip {
+      background: rgba(212,168,51,0.12);
+      color: #d4b855;
+      border: 1px solid rgba(212,168,51,0.3);
+    }
+
+    /* Closing slide elements */
+    .closing-countries {
+      display: flex;
+      gap: clamp(1.5rem, 3vw, 3rem);
+      flex-wrap: wrap;
+    }
+    .closing-country {
+      flex: 1;
+      min-width: 200px;
+      border-radius: 12px;
+      padding: clamp(14px, 2vh, 22px) clamp(18px, 2.5vw, 28px);
+    }
+    .closing-country.fin {
+      background: rgba(125,213,160,0.08);
+      border: 1px solid rgba(125,213,160,0.22);
+    }
+    .closing-country.egy {
+      background: rgba(212,168,51,0.08);
+      border: 1px solid rgba(212,168,51,0.22);
+    }
+    .closing-country-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .closing-country.fin .closing-country-name { color: #7dd5a0; }
+    .closing-country.egy .closing-country-name { color: #d4a833; }
+    .closing-country p {
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      opacity: 0.75;
+    }
+
+    .thank-you {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4.5vw, 3.5rem);
+      font-weight: 900;
+      font-style: italic;
+      color: rgba(255,255,255,0.9);
+      margin-top: clamp(6px, 1vh, 12px);
+    }
+    .agency-footer {
+      font-family: var(--font-body);
+      font-size: var(--small-size);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.35;
+      margin-top: clamp(4px, 0.6vh, 8px);
+    }
+
+    /* Keyboard hint */
+    .keyboard-hint {
+      position: fixed;
+      bottom: clamp(10px, 2vh, 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-body);
+      font-size: clamp(0.55rem, 0.9vw, 0.7rem);
+      color: rgba(255,255,255,0.25);
+      letter-spacing: 0.1em;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* Section divider line */
+    .accent-line {
+      width: clamp(30px, 4vw, 50px);
+      height: 2px;
+      border-radius: 2px;
+      margin: clamp(2px, 0.4vh, 6px) 0;
+    }
+    .slide-finland .accent-line { background: linear-gradient(90deg, #7dd5a0, #4aaad4); }
+    .slide-egypt   .accent-line { background: linear-gradient(90deg, #d4a833, #e07840); }
+    .slide-closing .accent-line { background: linear-gradient(90deg, #7dd5a0, #d4a833); }
+
+  </style>
+</head>
+<body>
+
+  <div class="progress-bar" id="progressBar"></div>
+  <nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+  <div class="keyboard-hint">↑ ↓ Arrow keys · Space · Scroll</div>
+
+  <!-- ============================================
+       SLIDE 1: COVER
+       ============================================ -->
+  <section class="slide slide-cover" id="slide-1" data-dot="cover-dot" aria-label="Cover slide">
+    <div class="cover-bg">
+      <div class="cover-finland-half"></div>
+      <div class="cover-egypt-half"></div>
+      <div class="cover-overlay"></div>
+      <div class="cover-aurora"></div>
+      <div class="cover-desert"></div>
+    </div>
+    <div class="cover-content">
+      <p class="cover-agency reveal d1">✈ &nbsp;Venture Elite Travel Agency</p>
+      <h1 class="cover-title reveal d2">
+        <span class="finland-word">Finland</span>
+        <span class="amp"> &amp; </span>
+        <span class="egypt-word">Egypt</span>
+      </h1>
+      <div class="cover-divider reveal d3"></div>
+      <p class="cover-subtitle reveal d4">Travel Presentation: Amazing destinations for culture, food, sports, and tourism</p>
+      <div class="cover-tags reveal d5">
+        <span class="cover-tag f">🇫🇮 Finland</span>
+        <span class="cover-tag e">🇪🇬 Egypt / Cairo</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 2: FINLAND – INTRODUCTION
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-2" data-dot="finland-dot" aria-label="Finland Introduction">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">02 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Introduction</p>
+      <h2 class="slide-heading reveal d2">Welcome to Finland</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div>
+          <p class="body-text reveal d3">Finland is a country in <strong>Northern Europe</strong>. It has about <strong>5.6 million</strong> people. One famous place is <strong>Rovaniemi</strong>, with about 65,000 residents. Finland is a clean, modern, and safe country. Finnish people love nature, and they respect silence and order.</p>
+          <br>
+          <p class="body-text reveal d4">Finland is famous for winter sports. People play <strong>ice hockey</strong>, and many people <strong>go</strong> skiing and <strong>go</strong> ice skating in winter.</p>
+        </div>
+        <ul class="there-are-list reveal d3">
+          <li><span class="ta-label">There are</span> forests and lakes.</li>
+          <li><span class="ta-label">There are</span> reindeer.</li>
+          <li><span class="ta-label">There are</span> igloos.</li>
+          <li><span class="ta-label">There are</span> museums.</li>
+          <li><span class="ta-label">There are</span> ice hotels.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 3: FINLAND – SPORTS & ACTIVITIES
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-3" data-dot="finland-dot" aria-label="Finland Sports and Activities">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">03 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Sports &amp; Activities</p>
+      <h2 class="slide-heading reveal d2">What <strong>Can</strong> You Do?</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div style="display:flex;flex-direction:column;gap:var(--element-gap);">
+          <div class="icon-row reveal d3"><span class="ico">⛷</span><span>Tourists <strong>can</strong> visit <strong>Santa Claus Village</strong> and see the <strong>Aurora Borealis</strong> at night.</span></div>
+          <div class="icon-row reveal d4"><span class="ico">🏂</span><span>They <strong>can go</strong> snowboarding, <strong>can go</strong> skiing, and <strong>can go</strong> ice skating. They <strong>can</strong> also ride sleighs and go snowmobiling.</span></div>
+          <div class="icon-row reveal d5"><span class="ico">⌚</span><span>Tourists <strong>could</strong> use a <strong>smartwatch</strong> to check their activity and GPS route. They use their <strong>eyes</strong> to watch the sky. They <strong>should</strong> sit quietly to enjoy the Northern Lights.</span></div>
+        </div>
+        <div class="rule-box reveal d4">
+          <p class="body-text"><strong>⚠ Rules to Remember</strong></p>
+          <br>
+          <ul class="elegant-list">
+            <li>Tourists <strong>should</strong> move <strong>carefully</strong> and act <strong>safely</strong>.</li>
+            <li>They <strong>can't</strong> throw garbage in nature.</li>
+            <li>They <strong>can't</strong> disturb wild animals.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 4: FINLAND – ECO-FRIENDLY TIPS
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-4" data-dot="finland-dot" aria-label="Finland Eco-Friendly Tips">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">04 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Eco-Friendly Tips</p>
+      <h2 class="slide-heading reveal d2">Be Kind to Nature 🌿</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <ul class="elegant-list">
+          <li class="reveal d3">Tourists <strong>should</strong> carry a reusable bottle — the tap water is very clean.</li>
+          <li class="reveal d4">They <strong>could</strong> use the local bus to reduce pollution.</li>
+          <li class="reveal d5">They <strong>should</strong> respect wild animals and forests.</li>
+          <li class="reveal d6">They <strong>could</strong> walk in the city or use electric transport.</li>
+          <li class="reveal d7">They <strong>can't</strong> throw garbage in natural places.</li>
+        </ul>
+        <div class="rule-box reveal d4" style="align-self:flex-start;">
+          <p class="body-text" style="font-weight:600;margin-bottom:8px;">👗 What to Wear</p>
+          <p class="body-text">Tourists <strong>should</strong> wear <strong>warm clothes</strong> and <strong>waterproof clothes</strong> because the weather is very <strong>cold</strong> in winter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 5: FINLAND – GASTRONOMY (Poronkäristys)
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-5" data-dot="finland-dot" aria-label="Finland Gastronomy Part 1">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">05 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Gastronomy</p>
+      <h2 class="slide-heading reveal d2">Finnish Food 🍽</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div class="dish-card reveal d3">
+          <p class="dish-name">Poronkäristys</p>
+          <p class="dish-desc">Reindeer stew with butter and salt. It is <strong>salty</strong> and delicious. You eat it with a <strong>fork</strong> and a <strong>knife</strong>, and sometimes with a <strong>spoon</strong> for the sauce.</p>
+          <div>
+            <span class="dish-tag">🥩 protein</span>
+            <span class="dish-tag">🧈 fat</span>
+          </div>
+        </div>
+        <div class="dish-card reveal d4">
+          <p class="dish-name">Lohikeitto</p>
+          <p class="dish-desc">A <strong>creamy</strong> salmon soup with potatoes and carrots. It is creamy and warm. You usually eat it with a <strong>spoon</strong>.</p>
+          <div>
+            <span class="dish-tag">🐟 protein</span>
+            <span class="dish-tag">🥦 vegetable</span>
+            <span class="dish-tag">🥛 dairy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 6: FINLAND – GASTRONOMY (Karelian + Restaurants)
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-6" data-dot="finland-dot" aria-label="Finland Gastronomy Part 2">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">06 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Gastronomy</p>
+      <h2 class="slide-heading reveal d2">More Flavors of Finland</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div>
+          <div class="dish-card reveal d3">
+            <p class="dish-name">Karelian Pies</p>
+            <p class="dish-desc">Traditional rye pastry filled with rice porridge. A classic Finnish snack.</p>
+          </div>
+          <br>
+          <div class="dish-card reveal d4">
+            <p class="dish-name">Glögi 🍷</p>
+            <p class="dish-desc">A hot berry drink with <strong>cinnamon</strong>, <strong>ginger</strong>, and <strong>cardamom</strong>. Perfect for cold winter nights.</p>
+          </div>
+        </div>
+        <div class="reveal d4" style="display:flex;flex-direction:column;gap:var(--element-gap);">
+          <p class="body-text" style="font-weight:600;opacity:0.7;">📍 Famous Restaurants in Rovaniemi</p>
+          <div class="restaurants">
+            <span class="rest-chip">🍽 Nili Restaurant</span>
+            <span class="rest-chip">🍽 Roka Street Bistro</span>
+            <span class="rest-chip">🍽 Santa's Salmon Place</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 7: FINLAND – FAQ PART 1
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-7" data-dot="finland-dot" aria-label="Finland FAQ Part 1">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">07 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Frequently Asked Questions</p>
+      <h2 class="slide-heading reveal d2">Finland FAQ ❓</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="faq-grid">
+        <div class="faq-item reveal d3">
+          <p class="faq-q">When do the Northern Lights appear?</p>
+          <p class="faq-a">Usually between <strong>9:00 p.m.</strong> and <strong>2:00 a.m.</strong></p>
+        </div>
+        <div class="faq-item reveal d4">
+          <p class="faq-q"><strong>Can</strong> I walk at night?</p>
+          <p class="faq-a">Yes! Tourists <strong>can</strong> walk safely at night.</p>
+        </div>
+        <div class="faq-item reveal d5">
+          <p class="faq-q"><strong>Should</strong> I bring warm &amp; waterproof clothes?</p>
+          <p class="faq-a">Yes, they <strong>should</strong>, because the temperature is very low.</p>
+        </div>
+        <div class="faq-item reveal d6">
+          <p class="faq-q"><strong>Can</strong> I pay with a contactless card?</p>
+          <p class="faq-a">Yes, they <strong>can</strong> pay for public transport with a contactless card.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 8: FINLAND – FAQ PART 2
+       ============================================ -->
+  <section class="slide slide-finland" id="slide-8" data-dot="finland-dot" aria-label="Finland FAQ Part 2">
+    <div class="section-label label-finland reveal">🇫🇮 Finland</div>
+    <div class="slide-num">08 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Frequently Asked Questions</p>
+      <h2 class="slide-heading reveal d2">Finland FAQ ❓</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="faq-grid">
+        <div class="faq-item reveal d3">
+          <p class="faq-q">Is the tap water drinkable?</p>
+          <p class="faq-a">Yes! It is one of the cleanest in the world.</p>
+        </div>
+        <div class="faq-item reveal d4">
+          <p class="faq-q">How far is Santa Claus Village?</p>
+          <p class="faq-a">About <strong>8 kilometers</strong> away, or <strong>15 minutes</strong> by bus.</p>
+        </div>
+        <div class="faq-item reveal d5">
+          <p class="faq-q">Where do I buy tickets?</p>
+          <p class="faq-a">They <strong>can</strong> buy tickets online, at tourist information points, or at the activity center.</p>
+        </div>
+        <div class="faq-item reveal d6">
+          <p class="faq-q"><strong>How much</strong> money for activities?</p>
+          <p class="faq-a">Tourists usually spend about <strong>50 to 150 euros</strong> per activity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 9: EGYPT – INTRODUCTION
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-9" data-dot="egypt-dot" aria-label="Egypt Introduction">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">09 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Introduction</p>
+      <h2 class="slide-heading reveal d2">Welcome to Egypt</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div>
+          <p class="body-text reveal d3">Egypt is a country in <strong>North Africa</strong>. Its capital city is <strong>Cairo</strong>, with about <strong>22 million</strong> residents. Egypt is famous for history, culture, and art. The people are friendly, and the <strong>Nile River</strong> is very important in the city.</p>
+          <br>
+          <p class="body-text reveal d4">Egypt is also famous for <strong>soccer</strong>. Many people play soccer, and it is a very popular sport in the country.</p>
+        </div>
+        <ul class="there-are-list reveal d3">
+          <li><span class="ta-label">There are</span> pyramids.</li>
+          <li><span class="ta-label">There are</span> camels.</li>
+          <li><span class="ta-label">There are</span> mosques.</li>
+          <li><span class="ta-label">There are</span> markets.</li>
+          <li><span class="ta-label">There are</span> amazing sunsets.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 10: EGYPT – SPORTS & ACTIVITIES
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-10" data-dot="egypt-dot" aria-label="Egypt Sports and Activities">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">10 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Sports &amp; Activities</p>
+      <h2 class="slide-heading reveal d2">What <strong>Can</strong> You Do?</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div style="display:flex;flex-direction:column;gap:var(--element-gap);">
+          <div class="icon-row reveal d3"><span class="ico">🏛</span><span>Tourists <strong>can</strong> visit the pyramids, explore the desert, ride a camel, and <strong>can also go</strong> sandboarding.</span></div>
+          <div class="icon-row reveal d4"><span class="ico">📱</span><span>They <strong>could</strong> use a <strong>fitness tracker</strong> to check their physical effort. They <strong>could</strong> use a <strong>sports camera</strong> for activities.</span></div>
+          <div class="icon-row reveal d5"><span class="ico">🦵</span><span>They use their <strong>legs</strong> and <strong>feet</strong> to keep balance. They use their <strong>arms</strong> to control movement.</span></div>
+        </div>
+        <div class="rule-box reveal d4">
+          <p class="body-text"><strong>⚠ Rules to Remember</strong></p>
+          <br>
+          <ul class="elegant-list">
+            <li>Tourists <strong>should</strong> be careful — the weather is hot.</li>
+            <li>They <strong>can't</strong> take pictures without permission.</li>
+            <li>They <strong>can't</strong> mistreat animals.</li>
+            <li>They <strong>should</strong> act respectfully in cultural places.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 11: EGYPT – ECO-FRIENDLY TIPS
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-11" data-dot="egypt-dot" aria-label="Egypt Eco-Friendly Tips">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">11 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Eco-Friendly Tips</p>
+      <h2 class="slide-heading reveal d2">Respect &amp; Protect 🌍</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <ul class="elegant-list">
+          <li class="reveal d3">Tourists <strong>should</strong> respect monuments, animals, and local culture.</li>
+          <li class="reveal d4">They <strong>should not</strong> throw garbage in the desert or near historical places.</li>
+          <li class="reveal d5">They <strong>could</strong> use organized transport and travel with a local guide.</li>
+          <li class="reveal d6">They <strong>should</strong> drink water to stay healthy in the heat.</li>
+          <li class="reveal d7">They <strong>should</strong> walk <strong>carefully</strong> in the desert.</li>
+        </ul>
+        <div class="rule-box reveal d4" style="align-self:flex-start;">
+          <p class="body-text" style="font-weight:600;margin-bottom:8px;">👗 What to Wear</p>
+          <p class="body-text">Tourists <strong>should</strong> wear <strong>light clothes</strong> because the weather is warm. They <strong>can</strong> use their <strong>eyes</strong> to admire the view of the pyramids.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 12: EGYPT – GASTRONOMY (Koshary + Ta'ameya)
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-12" data-dot="egypt-dot" aria-label="Egypt Gastronomy Part 1">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">12 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Gastronomy</p>
+      <h2 class="slide-heading reveal d2">Egyptian Food 🍽</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div class="dish-card reveal d3">
+          <p class="dish-name">Koshary</p>
+          <p class="dish-desc">Rice, pasta, lentils, tomato sauce, and crispy onions. You usually eat it with a <strong>spoon</strong> or a <strong>fork</strong>.</p>
+          <div>
+            <span class="dish-tag">🍚 carbohydrate</span>
+            <span class="dish-tag">🥩 protein</span>
+          </div>
+        </div>
+        <div class="dish-card reveal d4">
+          <p class="dish-name">Ta'ameya</p>
+          <p class="dish-desc">Egyptian falafel with fava beans and fresh herbs. You <strong>can</strong> eat it with your hands or with a <strong>fork</strong>. It is part of a <strong>plant-based diet</strong>.</p>
+          <div>
+            <span class="dish-tag">🌿 protein</span>
+            <span class="dish-tag">🌱 plant-based</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 13: EGYPT – GASTRONOMY (Om Ali + Restaurants)
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-13" data-dot="egypt-dot" aria-label="Egypt Gastronomy Part 2">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">13 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Gastronomy</p>
+      <h2 class="slide-heading reveal d2">More Flavors of Egypt</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="two-col">
+        <div class="dish-card reveal d3" style="align-self:flex-start;">
+          <p class="dish-name">Om Ali 🍮</p>
+          <p class="dish-desc">Made with puff pastry, milk, and nuts. You eat it with a <strong>spoon</strong>. A very famous Egyptian dessert.</p>
+          <div>
+            <span class="dish-tag">🍞 carbohydrate</span>
+            <span class="dish-tag">🥛 dairy</span>
+          </div>
+        </div>
+        <div class="reveal d4" style="display:flex;flex-direction:column;gap:var(--element-gap);">
+          <p class="body-text" style="font-weight:600;opacity:0.7;">📍 Famous Restaurants in Cairo</p>
+          <div class="restaurants">
+            <span class="rest-chip">🍽 Abou El Sid</span>
+            <span class="rest-chip">🍽 Koshary Abou Tarek</span>
+            <span class="rest-chip">🍽 Naguib Mahfouz Cafe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 14: EGYPT – FAQ PART 1
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-14" data-dot="egypt-dot" aria-label="Egypt FAQ Part 1">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">14 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Frequently Asked Questions</p>
+      <h2 class="slide-heading reveal d2">Egypt FAQ ❓</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="faq-grid">
+        <div class="faq-item reveal d3">
+          <p class="faq-q"><strong>Can</strong> I take a taxi to the pyramids?</p>
+          <p class="faq-a">Yes, they <strong>can</strong>, but the bus is cheaper and easier.</p>
+        </div>
+        <div class="faq-item reveal d4">
+          <p class="faq-q"><strong>Should</strong> women cover their shoulders and heads?</p>
+          <p class="faq-a">Yes, they <strong>should</strong> in mosques. It is respectful in many places.</p>
+        </div>
+        <div class="faq-item reveal d5">
+          <p class="faq-q"><strong>Should</strong> I pay in local currency?</p>
+          <p class="faq-a">Yes, they <strong>should</strong> use <strong>Egyptian pounds</strong>.</p>
+        </div>
+        <div class="faq-item reveal d6">
+          <p class="faq-q">Where <strong>can</strong> I buy a SIM card?</p>
+          <p class="faq-a">They <strong>can</strong> buy it at the airport or in <strong>Vodafone</strong> and <strong>Orange</strong> stores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 15: EGYPT – FAQ PART 2
+       ============================================ -->
+  <section class="slide slide-egypt" id="slide-15" data-dot="egypt-dot" aria-label="Egypt FAQ Part 2">
+    <div class="section-label label-egypt reveal">🇪🇬 Egypt / Cairo</div>
+    <div class="slide-num">15 / 16</div>
+    <div class="inner">
+      <p class="overline reveal d1">Frequently Asked Questions</p>
+      <h2 class="slide-heading reveal d2">Egypt FAQ ❓</h2>
+      <div class="accent-line reveal d2"></div>
+      <div class="faq-grid">
+        <div class="faq-item reveal d3">
+          <p class="faq-q"><strong>How long</strong> does it take to get there?</p>
+          <p class="faq-a">The trip <strong>can</strong> take about <strong>16 to 22 hours</strong>, depending on the route.</p>
+        </div>
+        <div class="faq-item reveal d4">
+          <p class="faq-q">Are photos allowed in the tombs?</p>
+          <p class="faq-a">Sometimes yes, but often an <strong>extra ticket</strong> is necessary.</p>
+        </div>
+        <div class="faq-item reveal d5">
+          <p class="faq-q"><strong>How many</strong> pyramids are in Giza?</p>
+          <p class="faq-a"><strong>There are</strong> three main pyramids in Giza.</p>
+        </div>
+        <div class="faq-item reveal d6">
+          <p class="faq-q"><strong>How much</strong> water in the desert?</p>
+          <p class="faq-a">They need a <strong>lot</strong> of water because the weather is very hot. <strong>There are</strong> many vegetarian options too!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SLIDE 16: CLOSING
+       ============================================ -->
+  <section class="slide slide-closing" id="slide-16" data-dot="close-dot" aria-label="Closing slide">
+    <div class="slide-num">16 / 16</div>
+    <div class="inner" style="align-items:center;text-align:center;">
+      <p class="overline reveal d1" style="opacity:0.45;color:#ccc;">In Conclusion</p>
+      <div class="closing-countries reveal d2">
+        <div class="closing-country fin">
+          <p class="closing-country-name">🇫🇮 Finland</p>
+          <p>A great place for <strong>snow</strong>, <strong>nature</strong>, and winter sports.</p>
+        </div>
+        <div class="closing-country egy">
+          <p class="closing-country-name">🇪🇬 Egypt</p>
+          <p>A great place for <strong>history</strong>, <strong>culture</strong>, and famous monuments.</p>
+        </div>
+      </div>
+      <div class="accent-line reveal d3" style="margin:clamp(8px,1.5vh,16px) auto;"></div>
+      <p class="body-text reveal d4" style="max-width:560px;opacity:0.7;">At <strong>Venture Elite Travel Agency</strong>, we are ready to help you enjoy these amazing places.</p>
+      <p class="thank-you reveal d5">Thank you for listening.</p>
+      <p class="agency-footer reveal d6">✈ &nbsp;Venture Elite Travel Agency</p>
+    </div>
+  </section>
+
+  <!-- ===========================================
+       JAVASCRIPT: SLIDE PRESENTATION CONTROLLER
+       =========================================== -->
+  <script>
+    /* === SLIDE PRESENTATION CONTROLLER === */
+    class SlidePresentation {
+      constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.totalSlides = this.slides.length;
+        this.currentIndex = 0;
+        this.isScrolling = false;
+        this.scrollCooldown = 800;
+
+        this.progressBar = document.getElementById('progressBar');
+        this.navDotsContainer = document.getElementById('navDots');
+
+        this.setupNavDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupScrollWheel();
+        this.updateProgress(0);
+      }
+
+      /* Build navigation dots from slide data-dot attributes */
+      setupNavDots() {
+        this.slides.forEach((slide, i) => {
+          const dot = document.createElement('button');
+          const dotClass = slide.dataset.dot || 'cover-dot';
+          dot.className = `nav-dot ${dotClass}`;
+          dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+          dot.addEventListener('click', () => this.goToSlide(i));
+          this.navDotsContainer.appendChild(dot);
+        });
+      }
+
+      /* Intersection Observer — triggers .visible on slide enter */
+      setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              const index = this.slides.indexOf(entry.target);
+              if (index !== -1) {
+                this.currentIndex = index;
+                this.updateProgress(index);
+                this.updateNavDots(index);
+              }
+            }
+          });
+        }, { threshold: 0.55 });
+
+        this.slides.forEach(slide => observer.observe(slide));
+      }
+
+      /* Update top progress bar */
+      updateProgress(index) {
+        const pct = this.totalSlides > 1
+          ? (index / (this.totalSlides - 1)) * 100
+          : 0;
+        if (this.progressBar) this.progressBar.style.width = pct + '%';
+      }
+
+      /* Highlight active nav dot */
+      updateNavDots(index) {
+        const dots = this.navDotsContainer.querySelectorAll('.nav-dot');
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      }
+
+      /* Scroll to a specific slide */
+      goToSlide(index) {
+        if (index < 0 || index >= this.totalSlides) return;
+        this.slides[index].scrollIntoView({ behavior: 'smooth' });
+      }
+
+      /* Keyboard navigation: arrows, space, page up/down */
+      setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+          switch (e.key) {
+            case 'ArrowDown':
+            case 'ArrowRight':
+            case ' ':
+              e.preventDefault();
+              this.goToSlide(this.currentIndex + 1);
+              break;
+            case 'ArrowUp':
+            case 'ArrowLeft':
+              e.preventDefault();
+              this.goToSlide(this.currentIndex - 1);
+              break;
+            case 'PageDown':
+              e.preventDefault();
+              this.goToSlide(this.currentIndex + 1);
+              break;
+            case 'PageUp':
+              e.preventDefault();
+              this.goToSlide(this.currentIndex - 1);
+              break;
+            case 'Home':
+              e.preventDefault();
+              this.goToSlide(0);
+              break;
+            case 'End':
+              e.preventDefault();
+              this.goToSlide(this.totalSlides - 1);
+              break;
+          }
+        });
+      }
+
+      /* Mouse wheel — navigate slides on each scroll burst */
+      setupScrollWheel() {
+        let lastTime = 0;
+        document.addEventListener('wheel', (e) => {
+          const now = Date.now();
+          if (now - lastTime < this.scrollCooldown) return;
+          lastTime = now;
+          if (e.deltaY > 0) {
+            this.goToSlide(this.currentIndex + 1);
+          } else {
+            this.goToSlide(this.currentIndex - 1);
+          }
+        }, { passive: true });
+      }
+
+      /* Touch/swipe navigation for mobile */
+      setupTouchNav() {
+        let startY = 0;
+        let startX = 0;
+        document.addEventListener('touchstart', (e) => {
+          startY = e.touches[0].clientY;
+          startX = e.touches[0].clientX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+          const dy = startY - e.changedTouches[0].clientY;
+          const dx = startX - e.changedTouches[0].clientX;
+          if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 50) {
+            if (dy > 0) this.goToSlide(this.currentIndex + 1);
+            else        this.goToSlide(this.currentIndex - 1);
+          }
+        }, { passive: true });
+      }
+    }
+
+    /* Boot the controller once DOM is ready */
+    document.addEventListener('DOMContentLoaded', () => {
+      new SlidePresentation();
+    });
+  </script>
+
+</body>
+</html>
